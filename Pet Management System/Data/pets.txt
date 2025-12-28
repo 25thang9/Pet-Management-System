@@ -1,0 +1,20 @@
+Dog|Buddy|3|Brown|Golden Retriever|John Smith
+Cat|Whiskers|2|Gray|Persian|Emma Johnson
+Fish|Goldie|1|Orange|Goldfish|Michael Brown
+Parrot|Coco|5|Green|African Grey|Sarah Davis
+Hamster|Fuzzy|1|White|Syrian Hamster|David Wilson
+Rabbit|Snowball|2|White|Netherland Dwarf|Lisa Anderson
+Bird|Tweety|4|Yellow|Canary|Robert Taylor
+Turtle|Shell|8|Green|Red-Eared Slider|Jennifer Martinez
+Guinea Pig|Peanut|2|Brown|American Guinea Pig|Chris Lee
+Lizard|Spike|3|Green|Bearded Dragon|Olivia Garcia
+Snake|Slither|6|Black|Ball Python|James Rodriguez
+Horse|Thunder|7|Black|Arabian|Sophia Hernandez
+Ferret|Bandit|3|White|Sable Ferret|Daniel Lopez
+Pig|Bacon|4|Pink|Pot-Bellied Pig|Emily Gonzalez
+Goat|Billy|5|White|Nubian Goat|Matthew Perez
+Sheep|Woolly|6|White|Merino Sheep|Charlotte Phillips
+Chicken|Nugget|2|Brown|Rhode Island Red|William Campbell
+Duck|Quack|3|White|Pekin Duck|Amelia Parker
+Mouse|Jerry|1|Gray|House Mouse|Thomas Evans
+Frog|Hoppy|2|Green|Tree Frog|Isabella Edwards
