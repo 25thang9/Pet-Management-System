@@ -148,7 +148,7 @@ void PetManager::searchByName() const {
 
         if (petName == lowerInput) {
             if (!found) {
-                cout << "\n======== RESULTS ========\n";
+                cout << "\n======================================== RESULTS =========================================\n";
                 cout << left << setw(12) << "SPECIES" << setw(20) << "NAME"
                      << setw(6) << "AGE" << setw(15) << "COLOR"
                      << setw(20) << "BREED" << "OWNER" << endl;
@@ -176,11 +176,13 @@ void PetManager::filterBySpecies() const {
     cout << "Enter species: ";
     getline(cin, s);
 
+    string lowerS = toLowerASCII(s);  // Chuyển input về chữ thường
+
     bool found = false;
     for (const auto& p : pets) {
-        if (p->getSpecies() == s) {
+        if (toLowerASCII(p->getSpecies()) == lowerS) {  // So sánh không phân biệt hoa thường
             if (!found) {
-                cout << "\n======== RESULTS ========\n";
+                cout << "\n======================================== RESULTS (" << s << ") =========================================\n";
                 cout << left << setw(12) << "SPECIES" << setw(20) << "NAME"
                      << setw(6) << "AGE" << setw(15) << "COLOR"
                      << setw(20) << "BREED" << "OWNER" << endl;
@@ -208,11 +210,13 @@ void PetManager::filterByColor() const {
     cout << "Enter color: ";
     getline(cin, c);
 
+    string lowerC = toLowerASCII(c);
+
     bool found = false;
     for (const auto& p : pets) {
-        if (p->getColor() == c) {
+        if (toLowerASCII(p->getColor()) == lowerC) {
             if (!found) {
-                cout << "\n======== RESULTS ========\n";
+                cout << "\n======================================== RESULTS (Color: " << c << ") =========================================\n";
                 cout << left << setw(12) << "SPECIES" << setw(20) << "NAME"
                      << setw(6) << "AGE" << setw(15) << "COLOR"
                      << setw(20) << "BREED" << "OWNER" << endl;
@@ -232,7 +236,6 @@ void PetManager::filterByColor() const {
     cout << "\n";
     system("pause");
 }
-
 void PetManager::filterByOwner() const {
     system("cls");
     cout << "\n\n";
@@ -240,11 +243,13 @@ void PetManager::filterByOwner() const {
     cout << "Enter owner: ";
     getline(cin, o);
 
+    string lowerO = toLowerASCII(o);
+
     bool found = false;
     for (const auto& p : pets) {
-        if (p->getOwner() == o) {
+        if (toLowerASCII(p->getOwner()) == lowerO) {
             if (!found) {
-                cout << "\n======== RESULTS ========\n";
+                cout << "\n======================================== RESULTS (Owner: " << o << ") =========================================\n";
                 cout << left << setw(12) << "SPECIES" << setw(20) << "NAME"
                      << setw(6) << "AGE" << setw(15) << "COLOR"
                      << setw(20) << "BREED" << "OWNER" << endl;
@@ -310,35 +315,38 @@ void PetManager::sortMenu() {
     SubMenu menu("SORT MENU", items);
 
     while (true) {
-        system("cls");  // Thêm để menu sạch
+        system("cls");
         int c = menu.show();
         if (c == -1 || c == 6) return;
 
         vector<Pet*> tmp = pets;
+
         switch (c) {
             case 0: sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b){ return a->getName() < b->getName(); }); break;
             case 1: sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b){ return a->getName() > b->getName(); }); break;
             case 2: sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b){ return a->getAge()  < b->getAge(); }); break;
             case 3: sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b){ return a->getAge()  > b->getAge(); }); break;
             case 4: 
-    sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b) {
-        return toLowerASCII(a->getBreed()) < toLowerASCII(b->getBreed());
-    });
-    break;
-
-case 5:
-    sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b) {
-        return toLowerASCII(a->getColor()) < toLowerASCII(b->getColor());
-    });
-    break;
+                sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b) {
+                    return toLowerASCII(a->getBreed()) < toLowerASCII(b->getBreed());
+                });
+                break;
+            case 5:
+                sort(tmp.begin(), tmp.end(), [](Pet* a, Pet* b) {
+                    return toLowerASCII(a->getColor()) < toLowerASCII(b->getColor());
+                });
+                break;
         }
+
         system("cls");
-        cout << "=== SORTED LIST ===\n";
+        // In danh sách đã sắp xếp
         for (size_t i = 0; i < tmp.size(); ++i) {
-            cout << left << setw(5) << (i+1) << " | ";
+            cout << left << setw(5) << (i + 1) << " | ";
             tmp[i]->display();
         }
-        cout << string(100, '-') << endl;
+
+        cout << string(145, '-') << endl;
+        cout << "Total: " << tmp.size() << " pets\n\n";
         system("pause");
     }
 }
@@ -379,48 +387,63 @@ void PetManager::statisticsMenu() const {
     }
 }
 
-// ============================= SỬA THÔNG TIN =============================
+// ============================= SỬA THÔNG TIN THÚ CƯNG  =============================
 void PetManager::editPet() {
     system("cls");
+
     if (pets.empty()) {
         cout << "Empty list!\n\n";
         system("pause");
         return;
     }
 
-    displayAll();   
+    // Hiển thị danh sách hiện có
+    displayAll();
 
     string name;
     cout << "\nEnter name to edit: ";
-    getline(cin, name);   // 
+    getline(cin, name);
 
+    if (name.empty()) {
+        cout << "\nNo name entered. Edit cancelled.\n\n";
+        system("pause");
+        return;
+    }
+
+    // ===== TÌM PET KHÔNG PHÂN BIỆT HOA / THƯỜNG =====
     Pet* pet = nullptr;
+    string lowerInput = toLowerASCII(name);
+
     for (auto p : pets) {
-        if (p->getName() == name) {
+        if (toLowerASCII(p->getName()) == lowerInput) {
             pet = p;
             break;
         }
     }
 
     if (!pet) {
-        cout << "\nNot found!\n\n";
+        cout << "\nPet not found!\n\n";
         system("pause");
         return;
     }
 
+    // Hiển thị thông tin hiện tại
     cout << "\nCurrent info:\n";
     pet->display();
+
     cout << "\nEnter new info (press Enter to keep old):\n";
 
     string input;
 
     cout << "Species [" << pet->getSpecies() << "]: ";
     getline(cin, input);
-    if (!input.empty()) pet->setSpecies(input);
+    if (!input.empty())
+        pet->setSpecies(input);
 
     cout << "Name [" << pet->getName() << "]: ";
     getline(cin, input);
-    if (!input.empty()) pet->setName(input);
+    if (!input.empty())
+        pet->setName(input);
 
     cout << "Age [" << pet->getAge() << "]: ";
     getline(cin, input);
@@ -429,19 +452,25 @@ void PetManager::editPet() {
 
     cout << "Color [" << pet->getColor() << "]: ";
     getline(cin, input);
-    if (!input.empty()) pet->setColor(input);
+    if (!input.empty())
+        pet->setColor(input);
 
     cout << "Breed [" << pet->getBreed() << "]: ";
     getline(cin, input);
-    if (!input.empty()) pet->setBreed(input);
+    if (!input.empty())
+        pet->setBreed(input);
 
     cout << "Owner [" << pet->getOwner() << "]: ";
     getline(cin, input);
-    if (!input.empty()) pet->setOwner(input);
+    if (!input.empty())
+        pet->setOwner(input);
 
     cout << "\nUpdated successfully!\n\n";
+
+    // Lưu dữ liệu sau khi chỉnh sửa
     saveData();
     cout << "Data has been saved to pets.txt!\n\n";
+
     system("pause");
 }
 
